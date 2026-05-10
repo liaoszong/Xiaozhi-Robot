@@ -84,6 +84,38 @@ Xiaozhi-Robot/
 - OpenMV 或摄像头模块；
 - 电源模块、连接线和固定结构件等。
 
+STM32F103RCT6 底盘主控板原理图如下。该板预留了电机驱动、OLED、灰度 / 循迹传感器、陀螺仪、OpenMV / 摄像头、按键、蜂鸣器和扩展排针接口，用于承接底盘侧的实时控制、传感器采集和状态显示任务。
+
+![STM32F103RCT6 底盘主控板原理图](docs/images/stm32_schematic.jpg)
+
+## 硬件连接
+
+### ESP32-S3 与 STM32F103RCT6
+
+ESP32-S3 小智端与 STM32 底盘端通过 UART 串口通信。当前代码中 ESP32 侧使用 `UART1`，映射到 GPIO43 / GPIO44；STM32 侧使用 `USART3`，引脚为 PC10 / PC11，串口参数为 115200 8N1。
+
+| ESP32-S3 小智端 | STM32F103RCT6 底盘端 | 说明 |
+| --- | --- | --- |
+| GPIO43 / U0_TXD | PC11 / USART3_RX | ESP32 向 STM32 发送 `CAR:X` 控制帧 |
+| GPIO44 / U0_RXD | PC10 / USART3_TX | STM32 向 ESP32 回传状态，当前可作为扩展保留 |
+| GND | GND | 两块板必须共地 |
+
+如果只使用“ESP32 发送指令、STM32 执行动作”的单向控制，最小连接为 `ESP32 TX -> STM32 RX` 和 `GND -> GND`。如果后续需要 STM32 回传运动状态、电量、传感器结果或任务执行状态，则同时连接 `STM32 TX -> ESP32 RX`。
+
+### STM32 底盘侧外设
+
+STM32 主控板将底盘执行和传感器模块集中接入，主要连接关系如下，具体排针位置可对照上方原理图丝印。
+
+| 模块 | STM32 侧接口 / 引脚 | 用途 |
+| --- | --- | --- |
+| 电机驱动 | `PWMA`、`PWMB`、`AIN1`、`AIN2`、`BIN1`、`BIN2` | 输出 PWM 和方向信号，控制左右电机前进、后退、转向与停止 |
+| 编码器 | `E1A`、`E1B`、`E2A`、`E2B` | 采集左右轮编码器脉冲，用于速度测量和闭环控制扩展 |
+| OLED 显示屏 | `SCK`、`SDA`、`3V3`、`GND` | 显示当前模式、指令、yaw 等调试状态 |
+| 九轴陀螺仪 | `U1_TX`、`U1_RX`、`5V`、`GND` | 获取姿态数据，当前主要使用 yaw 辅助直行和定角转向 |
+| 灰度 / 循迹传感器 | `AD0`、`AD1`、`AD2`、`5V`、`GND` | 采集地面灰度或循迹信号，用于循迹模块验证 |
+| OpenMV / 摄像头模块 | `U3_TX`、`U3_RX`、`5V`、`GND` | 预留视觉识别或串口视觉数据输入 |
+| 按键、LED、蜂鸣器 | 板载 GPIO | 用于模式切换、状态提示和基础人机交互 |
+
 ## 快速开始
 
 ### ESP32 侧
@@ -99,12 +131,22 @@ idf.py flash monitor
 
 本仓库不提交本机生成的 `sdkconfig`、`sdkconfig.old` 和 `build/` 目录。需要重新编译时，请根据实际硬件重新配置。
 
+烧录后请确认 `main/uart_controller.cc` 中的小车串口配置与实际接线一致：
+
+```text
+UART: UART1
+TX: GPIO43
+RX: GPIO44
+Baud: 115200
+Frame: CAR:<命令字符>\n
+```
+
 ### STM32 侧
 
 STM32 侧可根据项目文件使用 STM32CubeMX、Keil MDK 或 STM32CubeIDE 打开和编译。常见关注点包括：
 
 - 确认目标芯片为 STM32F103RCT6；
-- 确认 USART3 与 ESP32 侧 UART 参数一致；
+- 确认 USART3 与 ESP32 侧 UART 参数一致，当前 STM32 使用 `PC10/USART3_TX`、`PC11/USART3_RX`，波特率为 115200；
 - 确认电机 PWM、方向控制、OLED、循迹传感器和九轴陀螺仪连接与代码配置一致；
 - 编译输出目录、Keil 中间文件和本机 IDE 配置不会提交到仓库。
 
