@@ -1,0 +1,90 @@
+﻿# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.temp
+*.bak
+*.log
+*.cache
+*.pyc
+
+# Local IDE state
+.idea/
+.vscode/
+**/.idea/
+**/.vscode/
+
+# Local notes / agent plans
+**/docs/superpowers/
+
+# CMake / Ninja / generic build outputs
+**/build/
+**/Debug/
+**/Release/
+**/Objects/
+**/Listings/
+**/CMakeFiles/
+**/.cmake/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/compile_commands.json
+**/build.ninja
+**/.ninja_deps
+**/.ninja_log
+
+# STM32 / Keil / ARM build outputs
+*.axf
+*.map
+*.lst
+*.o
+*.obj
+*.d
+*.crf
+*.htm
+*.dep
+*.lnp
+*.hex
+*.bin
+*.elf
+*.scvd
+*.uv4.log*
+*.uvguix.*
+stm32f103rct6_car/MDK-ARM/stm32f103rct6_car/
+stm32f103rct6_car/MDK-ARM/.eide.usr.ctx.json
+stm32f103rct6_car/MDK-ARM/.eide/env.ini
+
+# ESP-IDF generated or local configuration
+xiaozhi-esp32/build/
+xiaozhi-esp32/managed_components/
+xiaozhi-esp32/components/
+xiaozhi-esp32/tmp/
+xiaozhi-esp32/releases/
+xiaozhi-esp32/sdkconfig
+xiaozhi-esp32/sdkconfig.old
+xiaozhi-esp32/.env
+xiaozhi-esp32/main/assets/lang_config.h
+xiaozhi-esp32/main/mmap_generate_emoji.h
+xiaozhi-esp32/mmap_generate_*.h
+
+# Old nested experimental copy, not part of the deliverable project
+stm32f103rct6_car/24h-/
+
+# Large vendor packs and unused CMSIS examples/tests
+stm32f103rct6_car/MDK-ARM/.pack/
+stm32f103rct6_car/Drivers/CMSIS/DSP/
+stm32f103rct6_car/Drivers/CMSIS/Core_A/
+stm32f103rct6_car/Drivers/CMSIS/Core/Template/
+
+# Keil/EIDE local helper caches
+stm32f103rct6_car/MDK-ARM/.cmsis/
+stm32f103rct6_car/MDK-ARM/.eide/
+*.code-workspace
+
+# Extra CMSIS packages not used by this STM32F103 project
+stm32f103rct6_car/Drivers/CMSIS/Lib/
+stm32f103rct6_car/Drivers/CMSIS/NN/
+stm32f103rct6_car/Drivers/CMSIS/RTOS/
+stm32f103rct6_car/Drivers/CMSIS/RTOS2/
+stm32f103rct6_car/Drivers/CMSIS/docs/
+stm32f103rct6_car/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/
