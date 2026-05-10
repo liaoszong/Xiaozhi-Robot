@@ -88,3 +88,8 @@ stm32f103rct6_car/Drivers/CMSIS/RTOS/
 stm32f103rct6_car/Drivers/CMSIS/RTOS2/
 stm32f103rct6_car/Drivers/CMSIS/docs/
 stm32f103rct6_car/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/
+
+# STM32 local helper files not required for repository build
+stm32f103rct6_car/MDK-ARM/.clang-format
+stm32f103rct6_car/MDK-ARM/.gitignore
+stm32f103rct6_car/Testing/
